@@ -1,12 +1,19 @@
 // @ts-check
 import { join } from "path";
 import { readFileSync } from "fs";
+
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import express from "express";
 import serveStatic from "serve-static";
+import fetch from 'node-fetch';
+
 
 import shopify from "./shopify.js";
 import productCreator from "./product-creator.js";
 import GDPRWebhookHandlers from "./gdpr.js";
+
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
@@ -30,9 +37,19 @@ app.post(
 );
 
 
+
 app.get('/api/tester', (req, res) => {
-    res.send('Hey! It works');
+    res.send('Hey! It worked');
 });
+
+app.get('/api/youtube', async (req, res) => {
+
+    const response = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${process.env.YOUTUBEAPI}&channelId=${process.env.YOUTUBECHANNEL}&part=snippet,id&order=date&maxResults=20`);
+    const data = await response.json();
+
+    
+    res.send(data);
+})
 
 
 // All endpoints after this point will require an active session
