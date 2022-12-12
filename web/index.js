@@ -37,10 +37,15 @@ app.post(
 );
 
 
+// Dummy Example /////////////
 
 app.get('/api/tester', (req, res) => {
     res.send('Hey! It worked');
 });
+
+
+// Youtube Example /////////////
+
 
 app.get('/api/youtube', async (req, res) => {
 
@@ -49,7 +54,29 @@ app.get('/api/youtube', async (req, res) => {
 
     
     res.send(data);
-})
+});
+
+// Klaviyo Example /////////////
+app.get('/api/newsletter/:email', async (req, res) => {
+
+    const url = `https://a.klaviyo.com/api/v2/list/${process.env.KLAVIYOLIST}/subscribe?api_key=${process.env.KLAVIYOAPI}`;
+    const options = {
+      method: 'POST',
+      headers: {accept: 'application/json', 'content-type': 'application/json'},
+      body: JSON.stringify({
+        profiles: [
+          {email: req.params.email}
+        ]
+      })
+    };
+    
+    const response = await fetch(url, options)
+      .then(res => res.json())
+      .then(json => console.log(json))
+      .catch(err => console.error('error:' + err));
+
+    res.send(response);
+});
 
 
 // All endpoints after this point will require an active session
