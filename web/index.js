@@ -31,7 +31,7 @@ app.post(
 
 
 app.get('/api/tester', (req, res) => {
-    res.send('Hey! It works!');
+    res.send('Hey! It works');
 });
 
 
